@@ -11,9 +11,10 @@ class TwitterBot {
     access_token_secret: process.env.TWITTER_API_ACCESS_SECRET,
   });
 
-  postTweet = async (tweet, inventory) => {
+  postTweet = async (tweet, dataToTweet) => {
     const tweetId = tweet.id_str;
-    const text = textFormatter(inventory);
+    const _inventory = textFormatter(dataToTweet.inventory);
+    const text = `${dataToTweet.bannerName}\n\n${_inventory}\n\nTotal Spend:${dataToTweet.totalSpend}`;
     await this.client.post('statuses/update', {
       status: text,
       auto_populate_reply_metadata: true,
@@ -40,9 +41,9 @@ class TwitterBot {
 
   tweetEvent = async tweet => {
     if (this.isCommandExist(tweet)) {
-      console.log(`Pulling for ${tweet.user.screen_name}`);
       const userId = tweet.user.id_str;
       const arrTweetText = tweet.text.split(' ');
+      let totalSpend = '';
       const command = arrTweetText
         .filter(word => {
           return word[0] == '=';
@@ -50,8 +51,15 @@ class TwitterBot {
         .split('_');
       const bannerId = command[1];
       const db = new Firebase(userId);
-      const isSingleRoll = command[0] ? command[0] === 'pullSingle' : false;
+      const isSingleRoll = command[0] ? command[0] === '=pullSingle' : false;
       const { id, banner } = getBanner(bannerId);
+
+      console.log(command[0]);
+      console.log(
+        `Pulling ${command[0] === '=pull' ? 10 : 1} ${banner.name} for ${
+          tweet.user.screen_name
+        }`
+      );
 
       if (!(await db.isAccountExist())) {
         console.log('Create new account');
@@ -65,7 +73,7 @@ class TwitterBot {
         inventory = isSingleRoll ? [banner.rollOnce()] : banner.roll();
         bannerState = Object.assign({});
         bannerState[id] = banner.getState();
-        await db.updateAccount({ banner: bannerState, inventory });
+        totalSpend = await db.updateAccount({ banner: bannerState, inventory });
       } else if (Object.keys(data.banner).length > 0) {
         if (Object.keys(data.banner).includes(id)) {
           // update existing banner
@@ -73,18 +81,29 @@ class TwitterBot {
           inventory = isSingleRoll ? [banner.rollOnce()] : banner.roll();
           bannerState = Object.assign({});
           bannerState[id] = banner.getState();
-          await db.updateAccount({ banner: bannerState, inventory });
+          totalSpend = await db.updateAccount({
+            banner: bannerState,
+            inventory,
+          });
         } else {
           // new banner
           inventory = isSingleRoll ? [banner.rollOnce()] : banner.roll();
           bannerState = Object.assign({});
           bannerState[id] = banner.getState();
           console.log(banner[id]);
-          await db.updateAccount({ banner: bannerState, inventory });
+          totalSpend = await db.updateAccount({
+            banner: bannerState,
+            inventory,
+          });
         }
       }
 
-      this.postTweet(tweet, inventory);
+      const dataToTweet = {
+        inventory,
+        totalSpend,
+        bannerName: banner.name,
+      };
+      this.postTweet(tweet, dataToTweet);
     }
   };
 }
