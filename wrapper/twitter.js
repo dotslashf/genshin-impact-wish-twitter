@@ -1,6 +1,7 @@
 const Twitter = require('twit');
 const { getBanner, textFormatter } = require('../helper/utils');
 const { Firebase } = require('./firebase');
+const fs = require('fs');
 require('dotenv').config();
 
 class TwitterBot {
@@ -14,12 +15,39 @@ class TwitterBot {
   postTweet = async (tweet, dataToTweet) => {
     const tweetId = tweet.id_str;
     const _inventory = textFormatter(dataToTweet.inventory);
-    const text = `${dataToTweet.bannerName}\n\n${_inventory}\n\nTotal Spend:${dataToTweet.totalSpend}`;
+    const media = await this.uploadMedia(dataToTweet.bannerSrc);
+    const text = `Result:\n\n${_inventory}\n\nTotal Spend: ${dataToTweet.totalSpend}`;
     await this.client.post('statuses/update', {
       status: text,
       auto_populate_reply_metadata: true,
       in_reply_to_status_id: tweetId,
+      media_ids: [media.media_id_string],
     });
+  };
+
+  uploadMedia = async path => {
+    const imageData = fs.readFileSync(`./media/${path}`, {
+      encoding: 'base64',
+    });
+
+    const upload = () => {
+      return new Promise(resolve => {
+        this.client.post(
+          'media/upload',
+          {
+            media_data: imageData,
+          },
+          (err, data, res) => {
+            if (!err) {
+              resolve(data);
+            }
+          }
+        );
+      });
+    };
+
+    const data = await upload();
+    return data;
   };
 
   isCommandExist = tweet => {
@@ -102,6 +130,7 @@ class TwitterBot {
         inventory,
         totalSpend,
         bannerName: banner.name,
+        bannerSrc: banner.src,
       };
       this.postTweet(tweet, dataToTweet);
     }

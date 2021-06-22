@@ -28,11 +28,13 @@ const getBanner = banner => {
 const _itemReducer = inventory => {
   const _inventory = Object.assign({});
   for (let i = 0; i < inventory.length; i++) {
-    if (_inventory[inventory[i].name]) {
-      _inventory[inventory[i].name].quantity++;
-    } else {
-      _inventory[inventory[i].name] = inventory[i];
-      _inventory[inventory[i].name].quantity = 1;
+    if (inventory[i] !== undefined) {
+      if (_inventory[inventory[i].name]) {
+        _inventory[inventory[i].name].quantity++;
+      } else {
+        _inventory[inventory[i].name] = inventory[i];
+        _inventory[inventory[i].name].quantity = 1;
+      }
     }
   }
   return _inventory;
@@ -59,7 +61,7 @@ const textFormatter = inventory => {
         weaponEmoji = '📖';
       }
       text.push(
-        `${item.rating}${ratingEmoji} ${weaponEmoji} ${item.name} x ${item.quantity}`
+        `${item.rating}${ratingEmoji} | ${weaponEmoji} ${item.name} x ${item.quantity}`
       );
     }
     if (item.type === 'character') {
