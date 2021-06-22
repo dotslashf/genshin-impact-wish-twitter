@@ -99,6 +99,7 @@ class BaseGacha {
     } else {
       result = items.filter(item => !item.isFeatured);
     }
+    result = items.filter(item => !item.hasOwnProperty(isFeatured));
     return result[this.generateRandomNumber(result.length)];
   }
   getGuaranteed4StarItemOrHigher() {
