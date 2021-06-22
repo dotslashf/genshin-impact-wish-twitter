@@ -27,8 +27,8 @@ class BaseGacha {
       attemptsCount: this.attemptsCount,
       pityCounter4: this.pityCounter4,
       pityCounter5: this.pityCounter5,
-      guaranteed4Star: this.guaranteedFeatured4Star,
-      guaranteed5Star: this.guaranteedFeatured5Star,
+      guaranteedFeatured4Star: this.guaranteedFeatured4Star,
+      guaranteedFeatured5Star: this.guaranteedFeatured5Star,
     };
   }
   setState(state) {
