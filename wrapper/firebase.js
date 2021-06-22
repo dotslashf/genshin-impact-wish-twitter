@@ -78,6 +78,11 @@ class Firebase {
     } else {
       await ref.update({ banner, inventory });
     }
+
+    let wishes = Object.keys(inventory).reduce((acc, item) => {
+      return acc + inventory[item].quantity;
+    }, 0);
+    return `$${(0.0129 * 160 * wishes).toFixed(2)}`;
   };
 }
 
