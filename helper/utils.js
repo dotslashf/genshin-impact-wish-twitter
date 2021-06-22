@@ -2,6 +2,10 @@ const { SparklingSteps } = require('../models/sparklingSteps');
 const { WanderlustInvocation } = require('../models/wanderlustInvocation');
 const { EpitomeInvocation } = require('../models/epitomeInvocation');
 
+const sleep = ms => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
 const getBanner = banner => {
   const limitedBanner = new SparklingSteps();
   const standardBanner = new WanderlustInvocation();
@@ -46,7 +50,7 @@ const textFormatter = inventory => {
   let inventoryArray = [];
   Object.keys(_inventory).map(i => inventoryArray.push(_inventory[i]));
   inventoryArray.map(item => {
-    const ratingEmoji = item.rating === '5' ? '🌟' : '⭐';
+    const ratingEmoji = item.rating === 5 ? '🌟' : '⭐';
     if (item.type === 'weapon') {
       let weaponEmoji = '';
       if (item.class === 'Sword') {
@@ -61,7 +65,7 @@ const textFormatter = inventory => {
         weaponEmoji = '📖';
       }
       text.push(
-        `${item.rating}${ratingEmoji} | ${weaponEmoji} ${item.name} x ${item.quantity}`
+        `${item.rating}${ratingEmoji} ${weaponEmoji} ${item.name} ${item.quantity}`
       );
     }
     if (item.type === 'character') {
@@ -80,7 +84,7 @@ const textFormatter = inventory => {
         charEmoji = '⚡';
       }
       text.push(
-        `${item.rating}${ratingEmoji} ${charEmoji} ${item.name} x ${item.quantity}`
+        `${item.rating}${ratingEmoji} ${charEmoji} ${item.name} ${item.quantity}`
       );
     }
   });
@@ -90,4 +94,5 @@ const textFormatter = inventory => {
 module.exports = {
   getBanner,
   textFormatter,
+  sleep,
 };

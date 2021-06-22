@@ -1,5 +1,5 @@
 const Twitter = require('twit');
-const { getBanner, textFormatter } = require('../helper/utils');
+const { getBanner, textFormatter, sleep } = require('../helper/utils');
 const { Firebase } = require('./firebase');
 const fs = require('fs');
 require('dotenv').config();
@@ -23,6 +23,8 @@ class TwitterBot {
       in_reply_to_status_id: tweetId,
       media_ids: [media.media_id_string],
     });
+
+    await sleep(60 * 1000);
   };
 
   uploadMedia = async path => {
@@ -54,11 +56,11 @@ class TwitterBot {
     let text = tweet.text;
     text = text.split(' ');
     if (
-      text.includes('=pullSingle_limited') ||
+      text.includes('=pullOne_limited') ||
       text.includes('=pull_limited') ||
-      text.includes('=pullSingle_standard') ||
+      text.includes('=pullOne_standard') ||
       text.includes('=pull_standard') ||
-      text.includes('=pullSingle_weapon') ||
+      text.includes('=pullOne_weapon') ||
       text.includes('=pull_weapon')
     ) {
       return true;
@@ -82,7 +84,6 @@ class TwitterBot {
       const isSingleRoll = command[0] ? command[0] === '=pullSingle' : false;
       const { id, banner } = getBanner(bannerId);
 
-      console.log(command[0]);
       console.log(
         `Pulling ${command[0] === '=pull' ? 10 : 1} ${banner.name} for ${
           tweet.user.screen_name
@@ -90,14 +91,13 @@ class TwitterBot {
       );
 
       if (!(await db.isAccountExist())) {
-        console.log('Create new account');
+        // create new account
         await db.createAccount();
       }
       const { data } = await db.getAccount(userId);
       let bannerState = {};
       let inventory = [];
       if (Object.keys(data.banner).length === 0) {
-        // create account
         inventory = isSingleRoll ? [banner.rollOnce()] : banner.roll();
         bannerState = Object.assign({});
         bannerState[id] = banner.getState();
