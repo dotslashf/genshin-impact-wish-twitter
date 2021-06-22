@@ -27,12 +27,16 @@ class BaseGacha {
       attemptsCount: this.attemptsCount,
       pityCounter4: this.pityCounter4,
       pityCounter5: this.pityCounter5,
+      guaranteed4Star: this.guaranteedFeatured4Star,
+      guaranteed5Star: this.guaranteedFeatured5Star,
     };
   }
   setState(state) {
     this.attemptsCount = state.attemptsCount;
     this.pityCounter4 = state.pityCounter4;
     this.pityCounter5 = state.pityCounter5;
+    this.guaranteedFeatured4Star = state.guaranteedFeatured4Star;
+    this.guaranteedFeatured5Star = state.guaranteedFeatured5Star;
   }
   getDrops(rating) {
     if (!rating) {
