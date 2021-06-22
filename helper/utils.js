@@ -28,7 +28,7 @@ const getBanner = banner => {
 const textFormatter = inventory => {
   let text = [];
   inventory.map(item => {
-    const rating = item.rating === '5' ? '🌟' : '⭐';
+    const ratingEmoji = item.rating === '5' ? '🌟' : '⭐';
     if (item.type === 'weapon') {
       let weaponEmoji = '';
       if (item.class === 'Sword') {
@@ -42,7 +42,7 @@ const textFormatter = inventory => {
       } else if (item.class === 'Catalyst') {
         weaponEmoji = '📖';
       }
-      text.push(`${rating} ${weaponEmoji} ${item.name}`);
+      text.push(`${item.rating}${ratingEmoji} ${weaponEmoji} ${item.name}`);
     }
     if (item.type === 'character') {
       let charEmoji = '';
@@ -59,7 +59,7 @@ const textFormatter = inventory => {
       } else if (item.element === 'Electro') {
         charEmoji = '⚡';
       }
-      text.push(`${rating} ${charEmoji} ${item.name}`);
+      text.push(`${item.rating}${ratingEmoji} ${charEmoji} ${item.name}`);
     }
   });
   return text.join('\n');

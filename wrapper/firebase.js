@@ -43,7 +43,6 @@ class Firebase {
     const _inventory = data.inventory;
     const _banner = data.banner;
     const newBanner = newData.banner;
-    console.log('newbanner', newBanner);
     const newInventory = newData.inventory.map(item => Object.assign({}, item));
 
     const bannerId = Object.keys(newBanner)[0];

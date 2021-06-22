@@ -40,7 +40,7 @@ class TwitterBot {
 
   tweetEvent = async tweet => {
     if (this.isCommandExist(tweet)) {
-      console.log('Lets pull');
+      console.log(`Pulling for ${tweet.user.screen_name}`);
       const userId = tweet.user.id_str;
       const arrTweetText = tweet.text.split(' ');
       const command = arrTweetText
