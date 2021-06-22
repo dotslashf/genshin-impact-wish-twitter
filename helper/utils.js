@@ -25,9 +25,25 @@ const getBanner = banner => {
   }
 };
 
+const _itemReducer = inventory => {
+  const _inventory = Object.assign({});
+  for (let i = 0; i < inventory.length; i++) {
+    if (_inventory[inventory[i].name]) {
+      _inventory[inventory[i].name].quantity++;
+    } else {
+      _inventory[inventory[i].name] = inventory[i];
+      _inventory[inventory[i].name].quantity = 1;
+    }
+  }
+  return _inventory;
+};
+
 const textFormatter = inventory => {
+  let _inventory = _itemReducer(inventory);
   let text = [];
-  inventory.map(item => {
+  let inventoryArray = [];
+  Object.keys(_inventory).map(i => inventoryArray.push(_inventory[i]));
+  inventoryArray.map(item => {
     const ratingEmoji = item.rating === '5' ? '🌟' : '⭐';
     if (item.type === 'weapon') {
       let weaponEmoji = '';
@@ -42,7 +58,9 @@ const textFormatter = inventory => {
       } else if (item.class === 'Catalyst') {
         weaponEmoji = '📖';
       }
-      text.push(`${item.rating}${ratingEmoji} ${weaponEmoji} ${item.name}`);
+      text.push(
+        `${item.rating}${ratingEmoji} ${weaponEmoji} ${item.name} x ${item.quantity}`
+      );
     }
     if (item.type === 'character') {
       let charEmoji = '';
@@ -59,7 +77,9 @@ const textFormatter = inventory => {
       } else if (item.element === 'Electro') {
         charEmoji = '⚡';
       }
-      text.push(`${item.rating}${ratingEmoji} ${charEmoji} ${item.name}`);
+      text.push(
+        `${item.rating}${ratingEmoji} ${charEmoji} ${item.name} x ${item.quantity}`
+      );
     }
   });
   return text.join('\n');
