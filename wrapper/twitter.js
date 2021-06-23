@@ -23,8 +23,6 @@ class TwitterBot {
       in_reply_to_status_id: tweetId,
       media_ids: [media.media_id_string],
     });
-
-    await sleep(60 * 1000);
   };
 
   uploadMedia = async path => {
@@ -81,7 +79,7 @@ class TwitterBot {
         .split('_');
       const bannerId = command[1];
       const db = new Firebase(userId);
-      const isSingleRoll = command[0] ? command[0] === '=pullSingle' : false;
+      const isSingleRoll = command[0] ? command[0] === '=pullOne' : false;
       const { id, banner } = getBanner(bannerId);
 
       console.log(
