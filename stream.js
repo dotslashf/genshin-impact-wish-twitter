@@ -26,6 +26,7 @@ const stream = client.stream('statuses/filter', parameters);
     });
 
     setInterval(() => {
+      console.log('Total tweets to process: ', tweets.length);
       const nextTweet = tweets.shift();
       if (nextTweet) {
         io.sockets.emit('tweet', nextTweet);

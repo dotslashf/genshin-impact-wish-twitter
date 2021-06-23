@@ -18,9 +18,12 @@ class TwitterBot {
 
   postTweet = async (tweet, dataToTweet) => {
     const tweetId = tweet.id_str;
-    const inventoryFormatted = textFormatter(dataToTweet.inventory);
     const media = await this.uploadMedia('', dataToTweet.inventory);
-    const text = `Result:\n\n${inventoryFormatted}\n\nTotal Spend: ${dataToTweet.totalSpend}`;
+    const text = textFormatter(
+      dataToTweet.inventory,
+      dataToTweet.bannerName,
+      dataToTweet.totalSpend
+    );
     await this.client.post('statuses/update', {
       status: text,
       auto_populate_reply_metadata: true,

@@ -46,7 +46,7 @@ const _itemReducer = inventory => {
   return _inventory;
 };
 
-const textFormatter = inventory => {
+const textFormatter = (inventory, bannerName, totalSpend) => {
   let _inventory = _itemReducer(inventory);
   let text = [];
   let inventoryArray = [];
@@ -56,45 +56,49 @@ const textFormatter = inventory => {
     return b.rating - a.rating;
   });
   inventoryArray.map(item => {
-    const ratingEmoji = item.rating === 5 ? '🌟' : '';
+    const ratingEmoji = item.rating === 5 ? '🌟' : '⭐';
+    let typeEmoji = '';
     if (item.type === 'weapon') {
-      let weaponEmoji = '';
       if (item.class === 'Sword') {
-        weaponEmoji = '🔪';
+        typeEmoji = '🔪';
       } else if (item.class === 'Bow') {
-        weaponEmoji = '🏹';
+        typeEmoji = '🏹';
       } else if (item.class === 'Polearm') {
-        weaponEmoji = '🔱';
+        typeEmoji = '🔱';
       } else if (item.class === 'Claymore') {
-        weaponEmoji = '🗡️';
+        typeEmoji = '🗡️';
       } else if (item.class === 'Catalyst') {
-        weaponEmoji = '📖';
+        typeEmoji = '📖';
       }
-      text.push(
-        `${item.rating}${ratingEmoji} ${weaponEmoji} ${item.name} ${item.quantity}`
-      );
     }
     if (item.type === 'character') {
-      let charEmoji = '';
       if (item.element === 'Hydro') {
-        charEmoji = '🌊';
+        typeEmoji = '🌊';
       } else if (item.element === 'Pyro') {
-        charEmoji = '🔥';
+        typeEmoji = '🔥';
       } else if (item.element === 'Geo') {
-        charEmoji = '🗿';
+        typeEmoji = '🗿';
       } else if (item.element === 'Cryo') {
-        charEmoji = '❄️';
+        typeEmoji = '❄️';
       } else if (item.element === 'Anemo') {
-        charEmoji = '🍃';
+        typeEmoji = '🍃';
       } else if (item.element === 'Electro') {
-        charEmoji = '⚡';
+        typeEmoji = '⚡';
       }
-      text.push(
-        `${item.rating}${ratingEmoji} ${charEmoji} ${item.name} ${item.quantity}`
-      );
     }
+
+    const rating = item.rating > 3 ? `${item.rating} ` : '';
+
+    text.push(
+      `${rating}${ratingEmoji}${typeEmoji} ${item.name} x ${item.quantity}`
+    );
   });
-  return text.join('\n');
+  const inventoryFormatted = text.join('\n');
+  const finalText = `${bannerName}:\n\n${inventoryFormatted}\n\nTotal Spend: ${totalSpend}`;
+  if (finalText.length >= 280) {
+    return `${bannerName}:\n\n${inventoryFormatted}`;
+  }
+  return finalText;
 };
 
 const createInventoryImg = async inventory => {
