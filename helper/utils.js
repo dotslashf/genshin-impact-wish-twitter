@@ -5,7 +5,7 @@ const sharp = require('sharp');
 const { joinImages } = require('join-images');
 
 const sleep = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms * 1000));
 };
 
 const getBanner = banner => {
@@ -51,8 +51,12 @@ const textFormatter = inventory => {
   let text = [];
   let inventoryArray = [];
   Object.keys(_inventory).map(i => inventoryArray.push(_inventory[i]));
+
+  inventoryArray.sort((a, b) => {
+    return b.rating - a.rating;
+  });
   inventoryArray.map(item => {
-    const ratingEmoji = item.rating === 5 ? '🌟' : '⭐';
+    const ratingEmoji = item.rating === 5 ? '🌟' : '';
     if (item.type === 'weapon') {
       let weaponEmoji = '';
       if (item.class === 'Sword') {
@@ -95,7 +99,6 @@ const textFormatter = inventory => {
 
 const createInventoryImg = async inventory => {
   const baseSrc = __dirname + '/../media';
-  const srcSave = __dirname + '/../media/upload.png';
   let inventorySrc = [];
   let inventoryBuffer = [];
   if (inventory.length > 1) {
@@ -111,7 +114,7 @@ const createInventoryImg = async inventory => {
             : 'right top';
         // console.log(resizeSize);
         const buffer = await sharp(i)
-          .resize(110, 200, {
+          .resize(240, 335, {
             fit: sharp.fit.cover,
             position: _position,
           })
@@ -151,20 +154,26 @@ const createInventoryImg = async inventory => {
       });
     });
 
-    joinImages([topBuffer, bottomBuffer], {
-      direction: 'vertical',
-      color: { alpha: 1, b: 255, g: 255, r: 255 },
-      align: 'center',
-    }).then(img => {
-      img.toFile(srcSave);
+    const finalBuffer = await new Promise(resolve => {
+      joinImages([topBuffer, bottomBuffer], {
+        direction: 'vertical',
+        color: { alpha: 1, b: 255, g: 255, r: 255 },
+        align: 'center',
+      }).then(img => {
+        resolve(img.png().toBuffer());
+      });
     });
+
+    return finalBuffer;
   }
   // only pull one / one inventory
   else if (inventory.length === 1) {
     const _position =
       inventory[0].type === 'character' ? sharp.strategy.entropy : 'right top';
 
-    await sharp(`${baseSrc}/${inventory[0].type}s/${inventory[0].src}`)
+    const buffer = await sharp(
+      `${baseSrc}/${inventory[0].type}s/${inventory[0].src}`
+    )
       .flatten({
         background: 'white',
       })
@@ -180,7 +189,8 @@ const createInventoryImg = async inventory => {
         background: '#4D91F1',
       })
       .png()
-      .toFile(srcSave);
+      .toBuffer();
+    return buffer;
   }
 };
 

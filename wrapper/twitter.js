@@ -5,7 +5,7 @@ const {
   createInventoryImg,
 } = require('../helper/utils');
 const { Firebase } = require('./firebase');
-const fs = require('fs');
+const fs = require('fs').promises;
 require('dotenv').config();
 
 class TwitterBot {
@@ -18,9 +18,9 @@ class TwitterBot {
 
   postTweet = async (tweet, dataToTweet) => {
     const tweetId = tweet.id_str;
-    const _inventory = textFormatter(dataToTweet.inventory);
-    const media = await this.uploadMedia('upload.png');
-    const text = `Result:\n\n${_inventory}\n\nTotal Spend: ${dataToTweet.totalSpend}`;
+    const inventoryFormatted = textFormatter(dataToTweet.inventory);
+    const media = await this.uploadMedia('', dataToTweet.inventory);
+    const text = `Result:\n\n${inventoryFormatted}\n\nTotal Spend: ${dataToTweet.totalSpend}`;
     await this.client.post('statuses/update', {
       status: text,
       auto_populate_reply_metadata: true,
@@ -29,8 +29,10 @@ class TwitterBot {
     });
   };
 
-  uploadMedia = async path => {
-    const imageData = fs.readFileSync(`./media/${path}`, {
+  uploadMedia = async (path, inventory) => {
+    const buffer = await createInventoryImg(inventory);
+    await fs.writeFile('./media/upload.png', buffer);
+    const imageData = await fs.readFile(`./media/upload.png`, {
       encoding: 'base64',
     });
 
@@ -120,21 +122,19 @@ class TwitterBot {
           inventory = isSingleRoll ? [banner.rollOnce()] : banner.roll();
           bannerState = Object.assign({});
           bannerState[id] = banner.getState();
-          console.log(banner[id]);
           totalSpend = await db.updateAccount({
             banner: bannerState,
             inventory,
           });
         }
       }
-      await createInventoryImg(inventory);
 
       const dataToTweet = {
         inventory,
         totalSpend,
         bannerName: banner.name,
-        bannerSrc: banner.src,
       };
+
       this.postTweet(tweet, dataToTweet);
     }
   };
