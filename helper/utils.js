@@ -95,67 +95,93 @@ const textFormatter = inventory => {
 
 const createInventoryImg = async inventory => {
   const baseSrc = __dirname + '/../media';
+  const srcSave = __dirname + '/../media/upload.png';
   let inventorySrc = [];
   let inventoryBuffer = [];
-  inventory.forEach(element => {
-    inventorySrc.push(`${baseSrc}/${element.type}s/${element.src}`);
-  });
+  if (inventory.length > 1) {
+    inventory.forEach(element => {
+      inventorySrc.push(`${baseSrc}/${element.type}s/${element.src}`);
+    });
 
-  await Promise.all(
-    inventorySrc.map(async (i, index) => {
-      const _position =
-        inventory[index].type === 'character'
-          ? sharp.strategy.entropy
-          : 'right top';
-      // console.log(resizeSize);
-      const buffer = await sharp(i)
-        .resize(110, 200, {
-          fit: sharp.fit.cover,
-          position: _position,
-        })
-        .extend({
-          top: 3,
-          left: 3,
-          right: 3,
-          bottom: 3,
-          background: '#4D91F1',
-        })
-        .png()
-        .toBuffer();
-      inventoryBuffer.push(buffer);
-    })
-  );
+    await Promise.all(
+      inventorySrc.map(async (i, index) => {
+        const _position =
+          inventory[index].type === 'character'
+            ? sharp.strategy.entropy
+            : 'right top';
+        // console.log(resizeSize);
+        const buffer = await sharp(i)
+          .resize(110, 200, {
+            fit: sharp.fit.cover,
+            position: _position,
+          })
+          .extend({
+            top: 3,
+            left: 3,
+            right: 3,
+            bottom: 3,
+            background: '#4D91F1',
+          })
+          .png()
+          .toBuffer();
+        inventoryBuffer.push(buffer);
+      })
+    );
 
-  let top = inventoryBuffer.splice(0, 5);
-  let bottom = inventoryBuffer;
+    let top = inventoryBuffer.splice(0, 5);
+    let bottom = inventoryBuffer;
 
-  const topBuffer = await new Promise(resolve => {
-    joinImages(top, {
-      direction: 'horizontal',
+    const topBuffer = await new Promise(resolve => {
+      joinImages(top, {
+        direction: 'horizontal',
+        color: { alpha: 1, b: 255, g: 255, r: 255 },
+        align: 'center',
+      }).then(img => {
+        resolve(img.png().toBuffer());
+      });
+    });
+
+    const bottomBuffer = await new Promise(resolve => {
+      joinImages(bottom, {
+        direction: 'horizontal',
+        color: { alpha: 1, b: 255, g: 255, r: 255 },
+        align: 'center',
+      }).then(img => {
+        resolve(img.png().toBuffer());
+      });
+    });
+
+    joinImages([topBuffer, bottomBuffer], {
+      direction: 'vertical',
       color: { alpha: 1, b: 255, g: 255, r: 255 },
       align: 'center',
     }).then(img => {
-      resolve(img.png().toBuffer());
+      img.toFile(srcSave);
     });
-  });
+  }
+  // only pull one / one inventory
+  else if (inventory.length === 1) {
+    const _position =
+      inventory[0].type === 'character' ? sharp.strategy.entropy : 'right top';
 
-  const bottomBuffer = await new Promise(resolve => {
-    joinImages(bottom, {
-      direction: 'horizontal',
-      color: { alpha: 1, b: 255, g: 255, r: 255 },
-      align: 'center',
-    }).then(img => {
-      resolve(img.png().toBuffer());
-    });
-  });
-
-  joinImages([topBuffer, bottomBuffer], {
-    direction: 'vertical',
-    color: { alpha: 1, b: 255, g: 255, r: 255 },
-    align: 'center',
-  }).then(img => {
-    img.toFile('./media/upload.png');
-  });
+    await sharp(`${baseSrc}/${inventory[0].type}s/${inventory[0].src}`)
+      .flatten({
+        background: 'white',
+      })
+      .resize(150, 300, {
+        fit: sharp.fit.cover,
+        position: _position,
+      })
+      .extend({
+        top: 3,
+        left: 3,
+        right: 3,
+        bottom: 3,
+        background: '#4D91F1',
+      })
+      .png()
+      .toFile(srcSave);
+  }
 };
 
 module.exports = {

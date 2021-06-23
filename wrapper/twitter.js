@@ -1,5 +1,9 @@
 const Twitter = require('twit');
-const { getBanner, textFormatter, sleep } = require('../helper/utils');
+const {
+  getBanner,
+  textFormatter,
+  createInventoryImg,
+} = require('../helper/utils');
 const { Firebase } = require('./firebase');
 const fs = require('fs');
 require('dotenv').config();
@@ -15,7 +19,7 @@ class TwitterBot {
   postTweet = async (tweet, dataToTweet) => {
     const tweetId = tweet.id_str;
     const _inventory = textFormatter(dataToTweet.inventory);
-    const media = await this.uploadMedia(dataToTweet.bannerSrc);
+    const media = await this.uploadMedia('upload.png');
     const text = `Result:\n\n${_inventory}\n\nTotal Spend: ${dataToTweet.totalSpend}`;
     await this.client.post('statuses/update', {
       status: text,
@@ -123,6 +127,7 @@ class TwitterBot {
           });
         }
       }
+      await createInventoryImg(inventory);
 
       const dataToTweet = {
         inventory,
