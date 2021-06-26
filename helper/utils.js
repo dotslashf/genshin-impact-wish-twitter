@@ -56,7 +56,7 @@ const textFormatter = (inventory, bannerName, totalSpend) => {
     return b.rating - a.rating;
   });
   inventoryArray.map(item => {
-    const ratingEmoji = item.rating === 5 ? '🌟' : '⭐';
+    const ratingEmoji = item.rating > 3 ? '🌟' : '';
     let typeEmoji = '';
     if (item.type === 'weapon') {
       if (item.class === 'Sword') {

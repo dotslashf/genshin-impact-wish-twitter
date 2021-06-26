@@ -24,12 +24,16 @@ class TwitterBot {
       dataToTweet.bannerName,
       dataToTweet.totalSpend
     );
-    await this.client.post('statuses/update', {
-      status: text,
-      auto_populate_reply_metadata: true,
-      in_reply_to_status_id: tweetId,
-      media_ids: [media.media_id_string],
-    });
+    try {
+      await this.client.post('statuses/update', {
+        status: text,
+        auto_populate_reply_metadata: true,
+        in_reply_to_status_id: tweetId,
+        media_ids: [media.media_id_string],
+      });
+    } catch {
+      console.log('Error tweeting inventory');
+    }
   };
 
   uploadMedia = async (path, inventory) => {
@@ -92,9 +96,9 @@ class TwitterBot {
       const { id, banner } = getBanner(bannerId);
 
       console.log(
-        `Pulling ${command[0] === '=pull' ? 10 : 1} ${banner.name} for ${
-          tweet.user.screen_name
-        }`
+        `${new Date().toLocaleString()}| Pull ${
+          command[0] === '=pull' ? 10 : 1
+        } ${banner.name} for ${tweet.user.screen_name}`
       );
 
       if (!(await db.isAccountExist())) {
