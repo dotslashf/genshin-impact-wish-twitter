@@ -1,6 +1,7 @@
 const { SparklingSteps } = require('../models/sparklingSteps');
 const { WanderlustInvocation } = require('../models/wanderlustInvocation');
 const { EpitomeInvocation } = require('../models/epitomeInvocation');
+const { LeavesInTheWind } = require('../models/leavesInTheWind');
 const sharp = require('sharp');
 const { joinImages } = require('join-images');
 
@@ -9,13 +10,13 @@ const sleep = ms => {
 };
 
 const getBanner = banner => {
-  const limitedBanner = new SparklingSteps();
+  const limitedBanner = new LeavesInTheWind();
   const standardBanner = new WanderlustInvocation();
   const weaponBanner = new EpitomeInvocation();
 
   if (banner === 'limited') {
     return {
-      id: 'sparklingSteps',
+      id: 'leavesInTheWind',
       banner: limitedBanner,
     };
   } else if (banner === 'standard') {
