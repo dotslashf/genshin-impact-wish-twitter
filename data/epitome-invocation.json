@@ -1,18 +1,17 @@
 [
 	{
-		"name": "Song of Broken Pines",
+		"name": "Skyward Atlas",
 		"rating": 5,
-		"class": "Sword",
-    "isFeatured": true,
-		"src": "song-of-broken-pines.png",
+		"class": "Catalyst",
+		"src": "skyward-atlas.png",
 		"type": "weapon"
 	},
 	{
-		"name": "Aquila Favonia",
+		"name": "Freedom-Sworn",
 		"rating": 5,
 		"class": "Sword",
     "isFeatured": true,
-		"src": "aquila-favonia.png",
+		"src": "freedom-sworn.png",
 		"type": "weapon"
 	},
 	{
@@ -26,6 +25,7 @@
 		"name": "Skyward Harp",
 		"rating": 5,
 		"class": "Bow",
+    "isFeatured": true,
 		"src": "skyward-harp.png",
 		"type": "weapon"
 	},
@@ -34,13 +34,6 @@
 		"rating": 5,
 		"class": "Catalyst",
 		"src": "lost-prayer-to-the-sacred-winds.png",
-		"type": "weapon"
-	},
-	{
-		"name": "Skyward Atlas",
-		"rating": 5,
-		"class": "Catalyst",
-		"src": "skyward-atlas.png",
 		"type": "weapon"
 	},
 	{
@@ -79,19 +72,26 @@
 		"type": "weapon"
 	},
 	{
-		"name": "Rust",
-		"rating": 4,
-		"class": "Bow",
-		"src": "rust.png",
-    "isFeatured": true,
+		"name": "Aquila Favonia",
+		"rating": 5,
+		"class": "Sword",
+		"src": "aquila-favonia.png",
 		"type": "weapon"
 	},
 	{
-		"name": "Sacrificial Fragments",
+		"name": "Alley Hunter",
 		"rating": 4,
+		"class": "Bow",
     "isFeatured": true,
+		"src": "alley-hunter.png",
+		"type": "weapon"
+	},
+	{
+		"name": "Wine and Song",
+		"rating": 4,
 		"class": "Catalyst",
-		"src": "sacrificial-fragments.png",
+    "isFeatured": true,
+		"src": "wine-and-song.png",
 		"type": "weapon"
 	},
 	{
@@ -103,20 +103,29 @@
 		"type": "weapon"
 	},
 	{
-		"name": "Rainslasher",
+		"name": "Favonius Greatsword",
 		"rating": 4,
-		"type": "weapon",
 		"class": "Claymore",
     "isFeatured": true,
-		"src": "rainslasher.png"
+		"src": "favonius-greatsword.png",
+		"type": "weapon"
 	},
 	{
-		"name": "Sacrificial Sword",
+		"name": "The Alley Flash",
 		"rating": 4,
 		"class": "Sword",
     "isFeatured": true,
-		"src": "sacrificial-sword.png",
+		"src": "the-alley-flash.png",
 		"type": "weapon"
+	},
+	{
+		"name": "Yanfei",
+		"element": "Pyro",
+		"type": "character",
+		"rating": 4,
+		"id": "749031411358288396",
+		"percentX": 62,
+		"src": "Yanfei.png"
 	},
 	{
 		"name": "Rosaria",
@@ -243,6 +252,13 @@
 		"src": "Barbara.png"
 	},
 	{
+		"name": "Rust",
+		"rating": 4,
+		"class": "Bow",
+		"src": "rust.png",
+		"type": "weapon"
+	},
+	{
 		"name": "Sacrificial Bow",
 		"rating": 4,
 		"class": "Bow",
@@ -271,6 +287,13 @@
 		"type": "weapon"
 	},
 	{
+		"name": "Sacrificial Fragments",
+		"rating": 4,
+		"class": "Catalyst",
+		"src": "sacrificial-fragments.png",
+		"type": "weapon"
+	},
+	{
 		"name": "The Widsith",
 		"rating": 4,
 		"class": "Catalyst",
@@ -292,6 +315,13 @@
 		"src": "favonius-lance.png"
 	},
 	{
+		"name": "Rainslasher",
+		"rating": 4,
+		"type": "weapon",
+		"class": "Claymore",
+		"src": "rainslasher.png"
+	},
+	{
 		"name": "Sacrificial Greatsword",
 		"rating": 4,
 		"type": "weapon",
@@ -306,17 +336,17 @@
 		"type": "weapon"
 	},
 	{
-		"name": "Favonius Greatsword",
-		"rating": 4,
-		"class": "Claymore",
-		"src": "favonius-greatsword.png",
-		"type": "weapon"
-	},
-	{
 		"name": "Lions Roar",
 		"rating": 4,
 		"class": "Sword",
 		"src": "lions-roar.png",
+		"type": "weapon"
+	},
+	{
+		"name": "Sacrificial Sword",
+		"rating": 4,
+		"class": "Sword",
+		"src": "sacrificial-sword.png",
 		"type": "weapon"
 	},
 	{
